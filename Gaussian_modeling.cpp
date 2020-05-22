@@ -4,7 +4,7 @@
 using namespace std;
 using namespace cv;
 
-int calcGaussianBackground(std::vector<cv::Mat> srcMats, cv::Mat& meanMat, cv::Mat& varMat)
+int calcGaussian(std::vector<cv::Mat> srcMats, cv::Mat& meanMat, cv::Mat& varMat)
 {
 	int rows = srcMats[0].rows;
 	int cols = srcMats[0].cols;
@@ -99,13 +99,14 @@ int main()
 			meanMat.create(frame.size(), CV_8UC1);
 			varMat.create(frame.size(), CV_32FC1);
 			std::cout << "calculating background models" << std::endl;
-			calcGaussianBackground(srcMats, meanMat, varMat);
+			calcGaussian(srcMats, meanMat, varMat);
 		}
 		else
 		{
 			//背景差分
 			dstMat.create(frame.size(), CV_8UC1);
 			gaussianThreshold(frame, meanMat, varMat, wVar, dstMat);
+
 			imshow("result", dstMat);
 			imshow("frame", frame);
 			waitKey(30);
