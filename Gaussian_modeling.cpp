@@ -4,7 +4,7 @@
 using namespace std;
 using namespace cv;
 
-int calcGaussian(std::vector<cv::Mat> srcMats, cv::Mat& meanMat, cv::Mat& varMat)
+int gaussianCalc(std::vector<cv::Mat> srcMats, cv::Mat& meanMat, cv::Mat& varMat)
 {
 	int rows = srcMats[0].rows;
 	int cols = srcMats[0].cols;
@@ -16,12 +16,14 @@ int calcGaussian(std::vector<cv::Mat> srcMats, cv::Mat& meanMat, cv::Mat& varMat
 			int sum = 0;
 			float var = 0;
 			//求均值
-			for (int i = 0; i < srcMats.size(); i++) {
+			for (int i = 0; i < srcMats.size(); i++)
+			{
 				sum += srcMats[i].at<uchar>(h, w);
 			}
 			meanMat.at<uchar>(h, w) = sum / srcMats.size();
 			//求方差
-			for (int i = 0; i < srcMats.size(); i++) {
+			for (int i = 0; i < srcMats.size(); i++) 
+			{
 				var += pow((srcMats[i].at<uchar>(h, w) - meanMat.at<uchar>(h, w)), 2);
 			}
 			varMat.at<float>(h, w) = var / srcMats.size();
@@ -69,7 +71,7 @@ int main()
 	std::vector<cv::Mat> srcMats;
 
 	//参数设置
-	int nBg = 200;		//用来建立背景模型的数量
+	int bg = 200;		//用来建立背景模型的数量
 	float wVar = 1;		//方差权重
 
 	int cnt = 0;
@@ -83,23 +85,22 @@ int main()
 		capVideo >> frame;
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
 
-		//前面的nBg帧，计算背景
-		if (cnt < nBg)
+		//前面的bg帧，计算背景
+		if (cnt < bg)
 		{
 			srcMats.push_back(frame);
-
 			if (cnt == 0)
 			{
-				std::cout << "reading frame " << std::endl;
+				std::cout << cnt << std::endl;
 			}
 		}
-		else if (cnt == nBg)
+		else if (cnt == bg)
 		{
 			//计算模型
 			meanMat.create(frame.size(), CV_8UC1);
 			varMat.create(frame.size(), CV_32FC1);
-			std::cout << "calculating background models" << std::endl;
-			calcGaussian(srcMats, meanMat, varMat);
+			std::cout << "gaussianCalc" << std::endl;
+			gaussianCalc(srcMats, meanMat, varMat);
 		}
 		else
 		{
