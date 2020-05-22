@@ -62,15 +62,8 @@ int gaussianThreshold(cv::Mat srcMat, cv::Mat meanMat, cv::Mat varMat, float wei
 
 int main()
 {
-	//----------------------打开摄像头--------------------------
+	//打开摄像头
 	VideoCapture capVideo(0);
-
-	//如果视频打开失败
-	if (!capVideo.isOpened())
-	{
-		std::cout << "Unable to open video!" << std::endl;
-		return -1;
-	}
 
 	//用来计算背景模型的图像
 	std::vector<cv::Mat> srcMats;
@@ -85,7 +78,7 @@ int main()
 	cv::Mat varMat;
 	cv::Mat dstMat;
 
-	while (true)
+	while (1)
 	{
 		capVideo >> frame;
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
